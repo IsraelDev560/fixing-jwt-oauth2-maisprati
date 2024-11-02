@@ -1,7 +1,6 @@
 package com.example.api_user.security;
 
 import com.example.api_user.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,12 +27,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final CustomUserDetailsService customUserDetailsService;
-
-    @Value("${spring.security.oauth2.client.registration.github.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.github.client-secret}")
-    private String clientSecret;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, CustomUserDetailsService customUserDetailsService){
         this.jwtAuthFilter = jwtAuthFilter;
@@ -67,12 +60,6 @@ public class SecurityConfig {
                         .requestMatchers("/users/**").authenticated()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
-                .oauth2Login(oauth2 -> oauth2.loginPage("/auth/login")
-                        .failureUrl("/auth/login?error"))
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .opaqueToken(token -> token
-                                .introspectionUri("https://github.com/login/oauth/introspect")
-                                .introspectionClientCredentials(clientId, clientSecret)))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public UserDTO getUserById(int id){
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = Optional.ofNullable(userRepository.findById(id));
         return user.map(this::convertToDTO).orElse(null);
     }
 
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public UserDTO updateUser(int id, UserDTO userDTO){
-        Optional<User> userOptional = userRepository.findById(id);
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findById(id));
         if(userOptional.isPresent()){
             User user = userOptional.get();
             user.setNome(userDTO.getNome());
